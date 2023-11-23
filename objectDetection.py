@@ -39,6 +39,29 @@ def detect_objects_from_frames(frames, cluster_labels, model, classes):
 
     return {label: list(objects) for label, objects in detected_objects.items()}
 
+def detect_objects_in_all_frames(frames, model, classes):
+    """
+    Detect objects in all video frames.
+
+    Args:
+    frames: List of video frames.
+    model: The loaded YOLO model.
+    classes: A list of class names that YOLO can detect.
+
+    Returns:
+    A list where each element contains the detected objects in the corresponding frame.
+    """
+    print("Object detection on each frame starts")
+    
+    detected_objects_per_frame = []
+
+    # Perform object detection on each frame
+    for frame in frames:
+        detected_objects = detect_objects_with_yolo(frame, model, classes)
+        detected_objects_per_frame.append(detected_objects)
+
+    return detected_objects_per_frame
+
 def detect_objects_with_yolo(frame, model, classes):
     """
     Detect objects in a frame using the YOLO model.
@@ -66,3 +89,5 @@ def detect_objects_with_yolo(frame, model, classes):
                 detected_labels.add(classes[class_id])
 
     return list(detected_labels)
+
+

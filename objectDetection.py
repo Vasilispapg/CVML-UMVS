@@ -59,6 +59,8 @@ def detect_objects_in_all_frames(frames, model, classes):
     for frame in frames:
         detected_objects = detect_objects_with_yolo(frame, model, classes)
         detected_objects_per_frame.append(detected_objects)
+        
+    print("Object detection on each frame ends")
 
     return detected_objects_per_frame
 

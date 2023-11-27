@@ -87,7 +87,7 @@ def detect_objects_with_yolo(frame, model, classes):
             scores = detection[5:]
             class_id = np.argmax(scores)
             confidence = scores[class_id]
-            if confidence > 0.95:  # Confidence threshold
+            if confidence > 0.85:  # Confidence threshold
                 detected_labels.add(classes[class_id])
 
     return list(detected_labels)

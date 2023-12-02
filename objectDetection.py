@@ -1,6 +1,7 @@
-import os
 import cv2
 import numpy as np
+from PIL import Image
+
 
 def detect_objects_from_frames(frames, cluster_labels, model, classes):
     """
@@ -76,20 +77,16 @@ def detect_objects_with_yolo(frame, model, classes):
     Returns:
     A list of detected object labels in the frame.
     """
-    height, width, _ = frame.shape
-    blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), swapRB=True, crop=False) # type: ignore
-    model.setInput(blob)
-    outputs = model.forward(model.getUnconnectedOutLayersNames())
-  
+    pil_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+
+    # Perform inference
+    results = model(pil_image)
+
+    # Parse results
     detected_labels = set()
-    for output in outputs:
-        for detection in output:
-            scores = detection[5:]
-            class_id = np.argmax(scores)
-            confidence = scores[class_id]
-            if confidence > 0.85:  # Confidence threshold
-                detected_labels.add(classes[class_id])
+    for _, _, _, _, conf, cls_id in results.xyxy[0].cpu().numpy():
+        if conf > 0.85:  # Confidence threshold
+            detected_labels.add(classes[int(cls_id)])
 
     return list(detected_labels)
-
 

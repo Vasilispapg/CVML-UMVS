@@ -4,3 +4,4 @@ yolo
 datasets
 *.pkl
 __pycache__
+*.pt

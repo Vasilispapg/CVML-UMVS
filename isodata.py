@@ -15,7 +15,7 @@ def initialize_parameters(parameters=None):
         return parameters.get(key, default)
 
     # number of clusters desired
-    K = safe_pull_value(parameters, 'K', 5)
+    K = safe_pull_value(parameters, 'K', 6)
 
     # maximum number of iterations
     I = safe_pull_value(parameters, 'I', 100)

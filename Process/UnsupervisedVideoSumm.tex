@@ -10,7 +10,7 @@
 \usepackage{hyperref}
 \usepackage{caption}
 
-\title{\Huge SVC Classification Report}
+\title{\Huge Unsupervised Multi-Modal Video Summarization Report}
 \author{\IEEEauthorblockN{Papagrigoriou Vasileios Savvas}
 \IEEEauthorblockA{Auth}}
 \date{09-11-2023}
@@ -95,7 +95,7 @@ This section delves deeper into the core of the project, highlighting the intric
 
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{videoID} & \textbf{Threshold} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Binary}  & \textbf{Prop\_high\_importance} \\
+\textbf{vID} & \textbf{Thres} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{Prop\_impo} \\
 \hline
 8 & 3 & 0.821229 & 0.7 & 0.755784  & 0.821229 \\
 \hline
@@ -126,7 +126,7 @@ This section delves deeper into the core of the project, highlighting the intric
 \begin{table}[H]
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{videoID} & \textbf{Threshold} & \textbf{Precision} & \textbf{Recall} & \textbf{F1 Macro} & \textbf{Prop\_high\_importance} \\
+\textbf{vID} & \textbf{Thres} & \textbf{Precision} & \textbf{Recall} & \textbf{F1Macro} & \textbf{Prop\_importance} \\
 \hline
  8&3 &  0.821229 & 0.7 &        0.87061  &             0.821229   \\
 \hline
@@ -135,8 +135,7 @@ This section delves deeper into the core of the project, highlighting the intric
 \end{table}
 
 
-\subsection*{Further Considerations and Future Research}
-Discussion: 27/11/23
+\subsection*{Update: 27/11/23}
 \begin{itemize}
     \item Reinforcement Learning: There is consideration to train a model with the current data using Reinforcement Learning to predict ground truths. However, the limited size of the TVSum dataset (50 videos) may impede the effectiveness of this approach.
     \item Frame Selection and Cluster Determination: The project is actively exploring efficient techniques for optimal frame selection and cluster determination, especially in the absence of annotations.
@@ -144,6 +143,37 @@ Discussion: 27/11/23
     \item Alternative Models: Exploring other models, such as SVM, for improved results on unknown videos is under consideration.
 \end{itemize}
 
+\section*{Recent Developments}
+\subsection*{Update: 11/12/2023}
 
+\subsubsection*{Code Enhancements and Functional Updates}
+Significant improvements have been made to the codebase since the last documented update. These enhancements aim to refine the model's performance and extend its capabilities. The following list highlights the key developments:
 
+\begin{itemize}
+    \item \textbf{Neural Network Integration:} Experimentation with various neural network models has been conducted to improve the summarization process.
+    \item \textbf{Dynamic Annotation:} Introduction of a dynamic annotation system to facilitate better labeling of the dataset.
+    \item \textbf{Debugging Tools:} Development of tools for saving and previewing data for each video, enhancing the debugging process.
+    \item \textbf{Text and Object Encoding:} The integration of tokenization for video titles and one-hot encoding for object detection has been completed to improve feature representation.
+    \item \textbf{Object Detection Model Update:} The transition from YOLOv3 to YOLOv5 for object detection aims to utilize advancements in accuracy and speed.
+\end{itemize}
+
+\subsection*{Update: 18/12/2023}
+
+\subsubsection*{Refinements in Video Summary Creation}
+\begin{itemize}
+\item \textbf{Importance Calculation:} The significance of each frame is now determined based on the Manhattan distance between the vectors of the video title and detected objects. This approach aims to align the frame's content more closely with the overall theme of the video.
+\item \textbf{Tokenizer Usage:} BERT tokenizer is employed for generating vectors.
+\item \textbf{Reassessment of Clustering Algorithm:} Moved away from Isodata due to its limitations. New clustering techniques are being explored, especially those better suited for handling the dynamic nature of video data.
+\item \textbf{Data Processing Enhancements:} Integration of PCA and LDA for improved feature extraction and representation.
+\item \textbf{Clustering Scope:} Focus on a small number of clusters (3 to 5) for a more targeted summarization approach.
+\item \textbf{Cluster Selection:} Utilizing best score based on changing points for cluster selection, though the effectiveness of this approach is under review.
+\item \textbf{Post-evaluation Concerns:} Unsure if the current post-evaluation approach fully meets the project's needs. Open to revisiting this to ensure it aligns more accurately with our objectives.
+\end{itemize}
+
+\subsubsection*{Help needed with the following:}
+\begin{itemize}
+\item \textbf{Evaluation Strategy:} The current strategy heavily depends on selecting the best cluster for video summarization. There's an ongoing discussion on whether a more complex evaluation framework could yield better results, considering aspects such as changing point evaluations and the effectiveness of Isodata hyperparameters.
+\item \textbf{Title-Based Importance Limitations:} The method of determining importance based on the Manhattan distance between titles and objects might not always yield accurate results. For example, if the video title is "Bert's Manscaping" and the detected objects are "person" and "table" the current system may struggle to establish relevant connections.
+\item \textbf{Suggestions for Improvement:} Exploring more advanced techniques or integrating additional layers of analysis (such as contextual understanding or sentiment analysis) could enhance the evaluation process. Feedback and ideas for refining the methodology are highly appreciated.
+\end{itemize}
 \end{document}

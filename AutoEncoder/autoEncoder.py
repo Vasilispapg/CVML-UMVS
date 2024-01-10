@@ -1,20 +1,21 @@
 from keras.layers import Input, Dense
-
 from keras.models import Model
 from keras.optimizers import Adam
-import numpy as np
 
-def create_and_train_autoencoder(features, encoding_dim=256, epochs=50, batch_size=32):
+def create_and_train_autoencoder(features, encoding_dim=1024, epochs=50, batch_size=32):
     input_dim = features.shape[1]
-    if np.isnan(features).any():
-        print("NaN values found in input data")
-    
+
     # Encoder
     input_layer = Input(shape=(input_dim,))
-    encoded = Dense(encoding_dim, activation='relu')(input_layer)
+    encoded = Dense(input_dim, activation='relu')(input_layer)
+    for dim in [input_dim//2, input_dim//4, input_dim//8, input_dim//16, input_dim//32, input_dim//64, encoding_dim]:
+        encoded = Dense(dim, activation='relu')(encoded)
 
     # Decoder
-    decoded = Dense(input_dim, activation='sigmoid')(encoded)
+    decoded = encoded
+    for dim in reversed([ input_dim//64, input_dim//32, input_dim//16, input_dim//8, input_dim//4, input_dim//2, input_dim]):
+        decoded = Dense(dim, activation='relu')(decoded)
+    decoded = Dense(input_dim, activation='sigmoid')(decoded)  # Match the original input size
 
     # Autoencoder Model
     autoencoder = Model(input_layer, decoded)
@@ -23,13 +24,14 @@ def create_and_train_autoencoder(features, encoding_dim=256, epochs=50, batch_si
     encoder = Model(input_layer, encoded)
 
     # Compile and train
-    optimizer = Adam(learning_rate=0.001)  # Example of using a lower learning rate
+    optimizer = Adam(learning_rate=0.1)
     autoencoder.compile(optimizer=optimizer, loss='mean_squared_error')
     autoencoder.fit(features, features, epochs=epochs, batch_size=batch_size, shuffle=True)
 
     return encoder
 
-def reduce_features_with_autoencoder(features, encoding_dim=256, epochs=50, batch_size=32):
+
+def reduce_features_with_autoencoder(features, encoding_dim=1024, epochs=10, batch_size=256):
     """
     The `reduce_features_with_autoencoder` function takes in a set of features, creates and trains an
     autoencoder model to reduce the dimensionality of the features, and returns the reduced features.

@@ -40,18 +40,19 @@ def calculate_importance(title, objects):
             obj_array = np.array(obj)
             title_array = np.array(title)
 
-            # Calculate Manhattan distance and sum it up for the frame
+            # Calculate distance and sum it up for the frame
             distance = cosine_distance(obj_array, title_array)
             frame_distance += distance
 
         # Store the summed distance for the frame
         importance_scores.append(frame_distance)
 
-    importance_scores=normalize_scores(importance_scores)
-    
-    # Invert the scores because lower Manhattan distance indicates higher similarity
+    # importance_scores=normalize_scores(importance_scores)
+    importance_scores = np.array(importance_scores)
+        
+    # Invert the scores because lower distance indicates higher similarity
     importance_scores = 1 - importance_scores
-    
+        
     # Handle zero scores to avoid division by zero later
     for i in range(len(importance_scores)):
         if importance_scores[i] == 0:

@@ -29,7 +29,7 @@ video_list = [video for video in os.listdir(video_path) if video.endswith('.mp4'
 
 def videoSumm(annotation_path=None, info_path=None, video_path=None, summary_video_path=None,video_list=None):
     for video in video_list: 
-        video='0tmA_C6XwfM.mp4'
+        # video='0tmA_C6XwfM.mp4'
         
         # if(os.path.exists(f'{summary_video_path}{video}')):
         #     continue
@@ -55,20 +55,22 @@ def videoSumm(annotation_path=None, info_path=None, video_path=None, summary_vid
         values = [score for score, frames in clip_info.values()]
         weights = [frames for score, frames in clip_info.values()]
 
+        # print("Values:",values)
+        # print("Weights:",weights)
         # Calculate the total number of frames in the video
         total_frames = len(original_frames)
-        print("Total Frames:",total_frames)
+        # print("Total Frames:",total_frames)
 
         # Calculate the capacity as 15% of the total number of frames
         capacity = int(0.16 * total_frames)
-        print("Capacity:",capacity)
+        # print("Capacity:",capacity)
 
         # Now apply the knapsack algorithm
         selected_clips = knapsack_for_video_summary(values, weights, capacity)
-        print("Summary Indices:",selected_clips)
+        # print("Summary Indices:",selected_clips)
         
         selected_indices=getSelectedIndicesFromClips(selected_clips,video)
-        print('Sum Len Frame:',len(selected_indices))
+        # print('Sum Len Frame:',len(selected_indices))
         
         summary_frames=[original_frames[i] for i in selected_indices]
         
@@ -89,7 +91,7 @@ def videoSumm(annotation_path=None, info_path=None, video_path=None, summary_vid
         # Extract data from video the next video
         getDataFlag=False
         deletePKLfiles(video_name)
-        break
+        
     # return
     
 videoSumm(annotation_path, info_path, video_path, summary_video_path, video_list)

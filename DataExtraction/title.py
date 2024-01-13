@@ -9,5 +9,5 @@ def tfTitle(info_file,video_path,tokenizer):
     print('title:',title)
 
     title_features = tokenizer(title).vector
-    print('title_features:',title_features.shape)
+    # print('title_features:',title_features.shape)
     return np.array(title_features)

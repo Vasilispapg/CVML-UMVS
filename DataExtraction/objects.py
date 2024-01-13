@@ -16,7 +16,7 @@ def loadYOLOv5():
         
     return yolo_model,classes
 
-def detectObjects(frames, yolo_model, classes, objects=None,encoded_objects=None,video=None,tokenizer=None):
+def detectObjects(frames, objects=None,encoded_objects=None,video=None,tokenizer=None):
     if objects is None:
         print('Detecting objects in frames...')
         yolo_model, classes = loadYOLOv5()
@@ -32,8 +32,8 @@ def detectObjects(frames, yolo_model, classes, objects=None,encoded_objects=None
         for o in obj:
             count+=1
             
-    print(f'Total Encoded Obj: {count}')
-    print("Objects:",len(objects))
+    # print(f'Total Encoded Obj: {count}')
+    # print("Objects:",len(objects))
 
     # One-hot encoding of objects
     if encoded_objects is None:

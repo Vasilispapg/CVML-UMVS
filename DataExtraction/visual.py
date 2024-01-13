@@ -113,8 +113,8 @@ def integrate_features(frames,vgg_features=None):
     
     integrated_features = StandardScaler().fit_transform(integrated_features)
     
-    print("integrated_features shape: ",integrated_features.shape)
-    print("integrated_features[0]: ",integrated_features[0].shape)
+    # print("integrated_features shape: ",integrated_features.shape)
+    # print("integrated_features[0]: ",integrated_features[0].shape)
    
     reduced_features = reduce_features_with_autoencoder(np.array(integrated_features))
     

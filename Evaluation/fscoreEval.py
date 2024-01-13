@@ -1,5 +1,6 @@
 import numpy as np
 import h5py
+import json
 
 def decode_titles(encoded_titles, hdf5_file):
     decoded_titles = []
@@ -64,6 +65,16 @@ def evaluate_summary(predicted_summary, user_summary, eval_method='avg'):
         return sum(f_scores) / len(f_scores)
 
 
+def saveResults(videoID,f_score_max,f_score_avg):
+    # save the results in a file
+    results={}
+    with open('results.json','r') as file:
+        results=json.load(file)
+        
+    results[videoID]={'f_score_max':f_score_max,'f_score_avg':f_score_avg}
+    with open('results.json', 'w') as file:
+        json.dump(results, file)
+    
 def evaluation_method(ground_truth_path,summary_indices,videoID):
     
     # Get the ground_truth
@@ -71,7 +82,8 @@ def evaluation_method(ground_truth_path,summary_indices,videoID):
 
     f_score_max = evaluate_summary(summary_indices, ground_truth, 'max')
     f_score_avg = evaluate_summary(summary_indices, ground_truth)
-
+    
+    saveResults(videoID,f_score_max,f_score_avg)
     
     print(f'F-scoreA: {f_score_avg:.2}%')
     print(f'F-scoreM: {f_score_max:.2}%')

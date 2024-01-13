@@ -1,6 +1,7 @@
 
-from autoEncoder import reduce_features_with_autoencoder
-
+from moviepy.editor import VideoFileClip
+import librosa
+import numpy as np
 
 def extract_audio_from_video(video_path, output_audio_path):
     video = VideoFileClip(video_path)
@@ -8,19 +9,25 @@ def extract_audio_from_video(video_path, output_audio_path):
     audio.write_audiofile(output_audio_path)
     video.close()
     
-def extract_audio_features_for_each_frame(audio_path, frame_rate,num_frames=None):
+def extract_audio_features_for_each_frame(audio_path, frame_rate=2,num_frames=None):
     y, sr = librosa.load(audio_path)
     
     # frame_rate 1/1 = 30
     # frame_rate 1/2 = 15
+    from keras.layers import Dense
+    from keras.models import Sequential
+
+    model = Sequential()
+    model.add(Dense(1024, input_dim=128, activation='relu'))
+    model.compile(optimizer='adam', loss='mean_squared_error')
 
     # Calculate the number of audio samples per video frame
-    samples_per_frame = sr / frame_rate
+    samples_per_frame = sr // frame_rate
     
-    print("samples_per_frame",samples_per_frame)
-    print("len(y)",len(y))
-    print("sr",sr)
-    print("frame_rate",frame_rate)
+    # print("samples_per_frame",samples_per_frame)
+    # print("len(y)",len(y))
+    # print("sr",sr)
+    # print("frame_rate",frame_rate)
 
     # Initialize an array to store MFCCs for each frame
     mfccs_per_frame = []
@@ -34,10 +41,20 @@ def extract_audio_features_for_each_frame(audio_path, frame_rate,num_frames=None
         end_sample = min(end_sample, len(y))
 
         # Extract MFCCs for the current frame's audio segment
-        mfccs_current_frame = librosa.feature.mfcc(y=y[start_sample:end_sample], sr=sr, n_mfcc=130)
+        mfccs_current_frame = librosa.feature.mfcc(y=y[start_sample:end_sample], sr=sr, n_mfcc=128)
         mfccs_processed = np.mean(mfccs_current_frame.T, axis=0)
-        mfccs_per_frame.append(mfccs_processed)
+        if mfccs_processed.ndim == 1:
+            mfccs_processed = np.expand_dims(mfccs_processed, axis=0)
 
+
+        expanded_features = model.predict(mfccs_processed)
+        # print("expanded_features",expanded_features.shape)
+
+        mfccs_per_frame.append(expanded_features[0])
+
+    # print("len(mfccs_per_frame)",len(mfccs_per_frame))
+    # print("len(mfccs_per_frame[0])",len(mfccs_per_frame[0]))
+    
     if(len(mfccs_per_frame)>num_frames):
         return mfccs_per_frame[:num_frames]
     return mfccs_per_frame

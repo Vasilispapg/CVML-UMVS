@@ -62,7 +62,7 @@ def compute_optical_flow(prev_frame, curr_frame):
 
 # Load the weights from the downloaded file
 base_model = VGG16(weights=None, include_top=False)
-weights_path = 'vgg16/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5' # Replace with the actual path
+weights_path = 'vgg16/vgg16_weights.h5' # Replace with the actual path
 base_model.load_weights(weights_path)
 
 # Create a new Sequential model and add the VGG16 base model

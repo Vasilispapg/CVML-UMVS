@@ -1,0 +1,213 @@
+
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{pmboxdraw}
+\usepackage{verbatim}
+
+
+\title{\Huge Unsupervised Multi-Modal Video Summarization Documentation}
+\author{\IEEEauthorblockN{Papagrigoriou Vasileios Savvas}
+\IEEEauthorblockA{Auth}}
+\date{09-11-2023}
+
+\begin{document}
+
+\maketitle
+
+\section*{Overview}
+Unsupervised Multi-Modal Video Summarization is a cutting-edge project at the intersection of computer vision and machine learning. Its primary aim is to automate the process of condensing lengthy videos into succinct summaries without the need for pre-labeled training data, leveraging advancements in object detection and unsupervised learning algorithms.
+
+\section*{Objectives}
+\begin{itemize}
+    \item Provide an efficient means of summarizing long videos to facilitate quicker content consumption and better information retention.
+    \item Utilize state-of-the-art object detection techniques to enhance the understanding of video content and improve the accuracy of summaries.
+    \item Employ unsupervised learning methods to enable automatic summarization that adapts to diverse video types and content without manual intervention.
+    \item Ensure the summarization process is scalable and performant, capable of handling large datasets and high-resolution videos.
+\end{itemize}
+
+\section*{Feature Extraction and Integration}
+\subsection*{Visual Features}
+\subsubsection*{Feature Extraction}
+    \textbf{Tool Used:} VGG16 is used to predict the features of the frames.\\
+    \textbf{Process:} Analyzes video frames to identify and categorize various objects.\\ 
+    \textbf{Tokenization:} RoBERTa used to tokenize the objects
+    \textbf{Output:} A vector of features for each frame.
+\\
+\subsubsection*{Histogram}
+    \textbf{Tool Used:} OpenCV is used to create the histogram.\\
+    \textbf{Process:} Calculate the histogram and normalize\\
+    \textbf{Output:} A vector of features for each frame.
+\\
+\subsubsection*{Optical Flow}
+    \textbf{Tool Used:} OpenCV is used to calculate the optical flow.\\
+    \textbf{Process:} From the previous and next frame calculate the optical flow based on the motion and the angle of the substraction.\\
+    \textbf{Output:} A vector of features for each frame.
+\\
+\subsubsection*{Integration of Visual Features}
+    \begin{itemize}
+        \item Integration: All the extracted features (visual features, histogram, optical flow) are concatenated.
+        \item Dimensionality Reduction: The concatenated feature vector is then fed into an AutoEncoder model to reduce its dimensionality to 1024.
+        \item Integration: The concatenated and reduced feature vector is used for further analysis and processing.
+    \end{itemize}
+
+\subsection*{Audio Features}
+\subsubsection*{Feature Extraction}
+    \textbf{Tool Used:} Librosa is used to extract the audio features.\\
+    \textbf{Process:} Extract the audio features using the MFCC algorithm.\\
+    \textbf{Output:} A vector of features for each frame.
+\\
+\subsubsection*{Integration of Audio Features}
+    \begin{itemize}
+        \item Integration: All the extracted features are concatenated.
+        \item Dimensionality Upscale: The feature vector is then fed into an Neural Network model to upscale its dimensionality from 128 to 1024.
+        \item Integration: The feature vector is used for further analysis and processing.
+    \end{itemize}
+
+\subsection*{Object Detection}
+\textbf{Tool Used:} YoloV5, renowned for its accuracy and speed in real-time object detection.\\
+\textbf{Process:} Analyzes video frames to identify and categorize various objects.\\ 
+\textbf{Tokenization:} RoBERTa used to tokenize the objects
+\textbf{Output:} A comprehensive list of detected objects, including their types and coordinates within each frame.
+
+\subsection*{Title}
+\textbf{Tool Used:} RoBERTa is used to tokenize the title.\\
+\textbf{Process:} Tokenize the title and create a vector of features.\\
+\textbf{Output:} A vector of (1024,) for the title.
+
+\subsection{Video Summarization}
+\textbf{Tool Used:} knapsack is used to create the trailer.\\
+\textbf{Process:} Calculate the knapsack based on the importance of each frame.\\
+\textbf{Output:} A trailer of 15 seconds.
+
+
+\section{GitHub Repository Structure}
+
+The GitHub repository contains several directories and files, each with a specific purpose in the Unsupervised Multi-Modal Video Summarization project:
+
+\textbf{AutoEncoder}
+\begin{itemize}
+    \item \texttt{autoEncoder.py}: Trains an autoencoder model for reducing the dimensionality of feature vectors extracted from the video.
+\end{itemize}
+
+\textbf{DataExtraction}
+\begin{itemize}
+    \item \texttt{audio.py}: Extracts audio features from the video for analysis.
+    \item \texttt{visual.py}: Processes video frames for visual feature extraction, utilizing color features and optical flow.
+    \item \texttt{objects.py}: Detects and encodes objects within video frames.
+    \item \texttt{title.py}: Extracts and processes title features from the video's metadata.
+    \item \texttt{getData.py}: Retrieves data for the other extraction modules.
+    \item \texttt{frames.py}: Manages individual video frames for processing.
+    \item \texttt{save.py}: Saves processed data for further use in the pipeline.
+\end{itemize}
+
+\textbf{Evaluation}
+\begin{itemize}
+    \item \texttt{fscoreEval.py}: Calculates F-scores to evaluate the quality of video summaries.
+\end{itemize}
+
+\textbf{knapsack}
+\begin{itemize}
+    \item \texttt{knapsack.py}: Implements the 0/1 knapsack algorithm to select the most important video segments for the summary.
+\end{itemize}
+
+\textbf{vgg16}
+\begin{itemize}
+    \item \texttt{vgg16\_weights.h5}: Holds the pre-trained weights for the VGG16 model used for image recognition tasks.
+\end{itemize}
+
+\textbf{yolo}
+\begin{itemize}
+    \item \texttt{coco.names}: Contains the names of the objects that the YOLOv5 model can detect.
+    \item \texttt{objectDetection.py}: Implements the YOLOv5 object detection algorithm to identify objects within video frames.
+\end{itemize}
+
+\textbf{datasets}
+\begin{itemize}
+    \item \texttt{extractedAudio}: Contains the audio features extracted from the video.
+    \item \texttt{summary\_videos}: Contains the summarized videos.
+    \item \texttt{ydata-tvsum50-v1\_1}: Contains the TVSum50 dataset.
+\end{itemize}
+
+\textbf{datasets/ydata-tvsum50-v1\_1}
+\begin{itemize}
+    \item \texttt{data}: Contains the dataset's annotations and information.
+    \item \texttt{video.zip}: Contains the videos in the dataset \textbf{(Extract the folder)}.
+    \item \texttt{ground\_truth}: Contains the ground truth data for the dataset.
+\end{itemize}
+
+\textbf{videoSum}
+\begin{itemize}
+    \item \texttt{clipImportance.py}: Determines the importance of each video clip for the summary.
+    \item \texttt{importances.py}: Defines functions for calculating the importance scores for frames.
+    \item \texttt{mapping.py}: Manages the correspondence between data representations and their importance scores.
+    \item \texttt{videoCreator.py}: Assembles the summarized video from selected frames based on their importance.
+    \item \texttt{deletePkl.py}: Deletes the `frame` pkl file created during the summarization process.
+    \item \texttt{\_\_init\_\_.py}: Initializes the video summarization pipeline.
+\end{itemize}
+
+\textbf{Other Files}
+\begin{itemize}
+    \item \texttt{.gitignore}: Lists files for Git to ignore.
+    \item \texttt{Presentation.pptx}: A presentation summarizing the project's objectives and findings.
+    \item \texttt{README.md}: Provides an overview of the project and instructions for use.
+    \item \texttt{results.json}: Contains the output data from the summarization process in JSON format.
+    \item \texttt{requirements.txt}: Lists the required Python packages for the project.
+\end{itemize}
+
+\subsection{Directory Tree}
+\begin{verbatim}
++-- AutoEncoder
+|   `-- autoEncoder.py
++-- DataExtraction
+|   |-- audio.py
+|   |-- data.py
+|   |-- frames.py
+|   |-- getData.py
+|   |-- objects.py
+|   |-- save.py
+|   |-- title.py
+|   `-- visual.py
++-- Evaluation
+|   `-- fscoreEval.py
++-- datasets
+|   |-- extractedAudio
+|   |   `-- extracted_audio.wav
+|   |-- summary_videos
+|   |-- ydata-tvsum50-v1_1
+|   |   |-- data
+|   |   |   |-- ydata-tvsum50-anno.tsv
+|   |   |   `-- ydata-tvsum50-info.tsv
+|   |   |-- video.zip
+|   |   `-- ground_truth
+|   |       `-- ydata-tvsum50.map
++-- yolo
+|   |-- coco.names
+|   `-- objectDetection.py
++-- knapsack
+|   `-- knapsack.py
++-- vgg16
+|   `-- vgg16_weights.h5
++-- videoSum
+|   |-- __init__.py
+|   |-- clipImportance.py
+|   |-- deletePkl.py
+|   |-- importances.py
+|   |-- mapping.py
+|   `-- videoCreator.py
++-- .gitignore
++-- Presentation.pptx
++-- README.md
++-- results.json
+`-- requirements.txt
+\end{verbatim}
+    
+
+\end{document}

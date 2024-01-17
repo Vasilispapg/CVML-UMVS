@@ -1,0 +1,15 @@
+scikit-learn-intelex
+opencv-python
+Keras
+tensorflow
+numpy
+pandas
+moviepy
+librosa
+h5py
+scikit-learn
+tabulate
+matplotlib
+pickle
+spacy-sentence-bert
+transformers

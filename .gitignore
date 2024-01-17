@@ -2,3 +2,4 @@ SumMe
 *.pkl
 __pycache__
 *.pt
+video

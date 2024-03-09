@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from sklearnex import patch_sklearn
-patch_sklearn()
 import cv2
 from keras.applications.vgg16 import VGG16, preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array

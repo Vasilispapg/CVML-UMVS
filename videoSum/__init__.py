@@ -7,6 +7,7 @@ sys.path.append('yolo')
 sys.path.append('videoSum')
 sys.path.append('knapsack')
 import os
+import numpy as np
 
 from frames import extract_frames
 from mapping import map_scores_to_original_frames
@@ -74,11 +75,13 @@ def videoSumm(annotation_path=None, info_path=None, video_path=None, summary_vid
         
         summary_frames=[original_frames[i] for i in selected_indices]
         
+        binary_summary_frames=np.zeros(len(original_frames))
+        binary_summary_frames[selected_indices]=1
+        
         # Evaluate
-        evaluation_method(ground_truth_path, selected_indices, video.split('.')[0])
+        evaluation_method(ground_truth_path, binary_summary_frames, video.split('.')[0])
         
         # print(tabulate([evaluated_metrics], headers=['Threshold', 'Precision', 'Recall', 'F1', 'Avg. Importance', 'Max. Importance', 'Prop. High Importance']))
-        getDataFlag=True
             
         video_name=video.split('.')[0]
         

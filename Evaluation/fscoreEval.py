@@ -1,6 +1,7 @@
 import numpy as np
 import h5py
 import json
+import os
 
 def decode_titles(encoded_titles, hdf5_file):
     decoded_titles = []
@@ -68,6 +69,9 @@ def evaluate_summary(predicted_summary, user_summary, eval_method='avg'):
 def saveResults(videoID,f_score_max,f_score_avg):
     # save the results in a file
     results={}
+    if(not os.path.exists('results.json')):
+        with open('results.json', 'w') as file:
+            json.dump(results, file)
     with open('results.json','r') as file:
         results=json.load(file)
         
